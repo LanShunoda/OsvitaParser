@@ -8,9 +8,8 @@ import java.io.IOException;
 public class Main {
     public static void main(String[] args) throws IOException {
 
-        Parser parser = new Parser("http://www.osvita.com.ua/universities/150/");
+        Parser parser = new Parser("http://www.osvita.com.ua/universities/120/");
         University u = parser.parse();
         System.out.println(u.toString());
-
     }
 }

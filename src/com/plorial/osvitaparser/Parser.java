@@ -6,6 +6,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * Created by plorial on 01.02.16.
@@ -36,23 +37,42 @@ public class Parser {
         university.setUniversitySite(elements.get(21).text());
         
         parseTrainingAreas(university, doc);
-//        System.out.println(doc.select("ul[class=grey direct1]").size());
-//        Elements e = doc.select("ul[class=grey direct1]");
-//        Elements r = e.get(0).getAllElements();
-//        Elements t = r.select("a[rel=nofollow]");
-//        System.out.println(t.size());
-//        System.out.println(t.get(0).text() + t.get(1).text());
+        parseFaculties(university, doc);
+
         return university;
     }
 
-    private void parseTrainingAreas(University university, Document doc) {
-        Elements firstColumn = doc.select("ul[class=grey direct1]").get(0).getAllElements().select("a[rel=nofollow]");
-        for (Element e : firstColumn) {
-            university.getTrainingAreas().add(e.text());
+    private void parseFaculties(University university, Document doc) {
+        Elements faculties = doc.select("h3");
+        Elements disc = doc.select("ul[type]");
+        if(faculties.size() - 1 == disc.size()) {
+            for (int i = 0; i < faculties.size() - 1; i++) {
+                ArrayList<String> specialitiesList = new ArrayList<>();
+                Elements specialities = disc.get(i).getAllElements();
+                for (int j = 1; j < specialities.size(); j++) {
+                    specialitiesList.add(specialities.get(j).text());
+                }
+                university.getFaculties().put(faculties.get(i).text(), specialitiesList);
+            }
+        }else{
+            System.err.println("Fuck this site!");
         }
-        Elements secondColumn = doc.select("ul[class=grey direct2]").get(0).getAllElements().select("a[rel=nofollow]");
-        for (Element e : secondColumn) {
-            university.getTrainingAreas().add(e.text());
+    }
+
+    private void parseTrainingAreas(University university, Document doc) {
+        Elements firstColumn = doc.select("ul[class=grey direct1]");
+        if (firstColumn.size() != 0) {
+            firstColumn = firstColumn.get(0).getAllElements().select("a[rel=nofollow]");
+            for (Element e : firstColumn) {
+                university.getTrainingAreas().add(e.text());
+            }
+        }
+        Elements secondColumn = doc.select("ul[class=grey direct2]");
+        if (secondColumn.size() != 0) {
+            secondColumn = secondColumn.get(0).getAllElements().select("a[rel=nofollow]");
+            for (Element e : secondColumn) {
+                university.getTrainingAreas().add(e.text());
+            }
         }
     }
 }

@@ -1,6 +1,7 @@
 package com.plorial.osvitaparser;
 
 import java.util.ArrayList;
+import java.util.TreeMap;
 
 /**
  * Created by plorial on 01.02.16.
@@ -11,10 +12,13 @@ public class University {
 
     private ArrayList<String> trainingAreas;
 
+    private TreeMap<String, ArrayList<String>> faculties;
+
     public University(String name, String city) {
         this.name = name;
         this.city = city;
         trainingAreas = new ArrayList<>();
+        faculties = new TreeMap<>();
     }
 
     private String yearOfFoundation;
@@ -116,6 +120,10 @@ public class University {
         this.trainingAreas = trainingAreas;
     }
 
+    public TreeMap<String, ArrayList<String>> getFaculties() {
+        return faculties;
+    }
+
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
@@ -144,7 +152,8 @@ public class University {
         builder.append(getUniversitySite());
         builder.append("\n");
         builder.append(getTrainingAreas());
-
+        builder.append("\n");
+        builder.append(getFaculties());
         return builder.toString();
     }
 }
