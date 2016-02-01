@@ -1,5 +1,7 @@
 package com.plorial.osvitaparser;
 
+import java.util.ArrayList;
+
 /**
  * Created by plorial on 01.02.16.
  */
@@ -7,9 +9,12 @@ public class University {
     public final String name;
     public final String city;
 
+    private ArrayList<String> trainingAreas;
+
     public University(String name, String city) {
         this.name = name;
         this.city = city;
+        trainingAreas = new ArrayList<>();
     }
 
     private String yearOfFoundation;
@@ -22,8 +27,6 @@ public class University {
     private String telephone;
     private String telephoneOfSelectionCommittee;
     private String universitySite;
-
-    private String[] trainingAreas;
 
     public String getYearOfFoundation() {
         return yearOfFoundation;
@@ -105,11 +108,11 @@ public class University {
         this.universitySite = universitySite;
     }
 
-    public String[] getTrainingAreas() {
+    public ArrayList<String> getTrainingAreas() {
         return trainingAreas;
     }
 
-    public void setTrainingAreas(String[] trainingAreas) {
+    public void setTrainingAreas(ArrayList<String> trainingAreas) {
         this.trainingAreas = trainingAreas;
     }
 
@@ -139,6 +142,8 @@ public class University {
         builder.append(getYearOfFoundation());
         builder.append("\n");
         builder.append(getUniversitySite());
+        builder.append("\n");
+        builder.append(getTrainingAreas());
 
         return builder.toString();
     }

@@ -2,6 +2,7 @@ package com.plorial.osvitaparser;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
@@ -33,7 +34,25 @@ public class Parser {
         university.setTelephone(elements.get(17).text());
         university.setTelephoneOfSelectionCommittee(elements.get(19).text());
         university.setUniversitySite(elements.get(21).text());
-
+        
+        parseTrainingAreas(university, doc);
+//        System.out.println(doc.select("ul[class=grey direct1]").size());
+//        Elements e = doc.select("ul[class=grey direct1]");
+//        Elements r = e.get(0).getAllElements();
+//        Elements t = r.select("a[rel=nofollow]");
+//        System.out.println(t.size());
+//        System.out.println(t.get(0).text() + t.get(1).text());
         return university;
+    }
+
+    private void parseTrainingAreas(University university, Document doc) {
+        Elements firstColumn = doc.select("ul[class=grey direct1]").get(0).getAllElements().select("a[rel=nofollow]");
+        for (Element e : firstColumn) {
+            university.getTrainingAreas().add(e.text());
+        }
+        Elements secondColumn = doc.select("ul[class=grey direct2]").get(0).getAllElements().select("a[rel=nofollow]");
+        for (Element e : secondColumn) {
+            university.getTrainingAreas().add(e.text());
+        }
     }
 }
