@@ -1,5 +1,6 @@
 package com.plorial.osvitaparser;
 
+import org.jsoup.HttpStatusException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -19,7 +20,13 @@ public class Parser {
     }
 
     public University parse() throws IOException {
-        Document doc = Jsoup.connect(URL).get();
+        Document doc;
+        try {
+            doc = Jsoup.connect(URL).get();
+        }catch (HttpStatusException e){
+            return null;
+        }
+
         String name = doc.select("h1").get(0).text();
         String city = doc.select("span[itemprop=addressLocality]").text();
         University university = new University(name, city);
