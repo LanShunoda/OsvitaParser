@@ -29,11 +29,23 @@ public class SQLiteJDBC {
     public void createTable(){
         try {
             statement = connection.createStatement();
-            String sql = "CREATE TABLE if not exists UNIVERSITIES " +
-                    "(ID INT PRIMARY KEY     NOT NULL," +
-                    "NAME TEXT NOT NULL," +
-                    "CITY TEXT NOT NULL)";
-            statement.executeUpdate(sql);
+            StringBuilder sql = new StringBuilder("CREATE TABLE if not exists UNIVERSITIES ")
+                    .append("(ID INT PRIMARY KEY     NOT NULL,")
+                    .append("NAME TEXT NOT NULL,")
+                    .append("CITY TEXT NOT NULL,")
+                    .append("YEAR TEXT,")
+                    .append("STATUS TEXT,")
+                    .append("ACCREDITATION TEXT,")
+                    .append("DOCUMENT TEXT,")
+                    .append("FORM_OF_EDUCATION TEXT,")
+                    .append("QUALIFICATION TEXT,")
+                    .append("ADDRESS TEXT,")
+                    .append("TELEPHONE TEXT,")
+                    .append("TELEPHONE_OF_SELECTION_COMMITTEE TEXT,")
+                    .append("SITE TEXT,")
+                    .append("TRAINING_AREAS TEXT,")
+                    .append("FACULTIES TEXT);");
+            statement.executeUpdate(sql.toString());
 //            connection.commit();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -42,10 +54,42 @@ public class SQLiteJDBC {
     }
 
     public void insertToTable(University u, int key){
-        String sql = "INSERT INTO UNIVERSITIES (ID, NAME, CITY) " +
-                "VALUES (" + key + ", '"+ u.name + "', '"+ u.city + "');";
+        StringBuilder sql = new StringBuilder("INSERT INTO UNIVERSITIES (ID, NAME, CITY, YEAR, STATUS, ACCREDITATION, ")
+                .append("DOCUMENT, FORM_OF_EDUCATION, ")
+                .append("QUALIFICATION, ADDRESS, TELEPHONE, TELEPHONE_OF_SELECTION_COMMITTEE , SITE, TRAINING_AREAS, FACULTIES) ")
+                .append("VALUES (")
+                .append(key)
+                .append(", '")
+                .append(u.name)
+                .append("', '")
+                .append(u.city)
+                .append("', '")
+                .append(u.getYearOfFoundation())
+                .append("', '")
+                .append(u.getStatus())
+                .append("', '")
+                .append(u.getAccreditation())
+                .append("', '")
+                .append(u.getDocumentAfterFinish())
+                .append("', '")
+                .append(u.getFormOfEducation())
+                .append("', '")
+                .append(u.getQualificationLevels())
+                .append("', '")
+                .append(u.getAddress())
+                .append("', '")
+                .append(u.getTelephone())
+                .append("', '")
+                .append(u.getTelephoneOfSelectionCommittee())
+                .append("', '")
+                .append(u.getUniversitySite())
+                .append("', '")
+                .append(u.getTrainingAreas())
+                .append("', '")
+                .append(u.getFaculties())
+                .append("');");
         try {
-            statement.executeUpdate(sql);
+            statement.executeUpdate(sql.toString());
         } catch (SQLException e) {
             e.printStackTrace();
         }
