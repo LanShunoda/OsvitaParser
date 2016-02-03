@@ -71,21 +71,21 @@ public class Parser {
         if (firstColumn.size() != 0) {
             firstColumn = firstColumn.get(0).getAllElements().select("a[rel=nofollow]");
             for (Element e : firstColumn) {
-                university.getTrainingAreas().add(e.text());
+                university.getTrainingAreas().add("(" + e.text() + ")");
             }
         }
         Elements secondColumn = doc.select("ul[class=grey direct2]");
         if (secondColumn.size() != 0) {
             secondColumn = secondColumn.get(0).getAllElements().select("a[rel=nofollow]");
             for (Element e : secondColumn) {
-                university.getTrainingAreas().add(e.text());
+                university.getTrainingAreas().add("(" + e.text() + ")");
             }
         }
         Elements column = doc.select("ul[class=grey]");
         if (column.size() != 0) {
             column = column.get(0).getAllElements().select("a[href=#]");
             for (Element e : column) {
-                university.getTrainingAreas().add(e.text());
+                university.getTrainingAreas().add("(" + e.text() + ")");
             }
         }
     }
