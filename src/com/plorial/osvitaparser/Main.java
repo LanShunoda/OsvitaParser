@@ -22,11 +22,11 @@ public class Main {
                 continue;
             }else {
                 db.insertToTable(u, counter);
-                System.out.println(i + "university added");
+                System.out.println(i + " university added");
                 counter++;
             }
         }
-        System.out.println("Universities added " + counter);
+        System.out.println("Universities added " + (counter - 1));
         db.closeDB();
     }
 }

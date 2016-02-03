@@ -19,7 +19,7 @@ public class SQLiteJDBC {
             e.printStackTrace();
         }
         try {
-            connection = DriverManager.getConnection("jdbc:sqlite:test.db");
+            connection = DriverManager.getConnection("jdbc:sqlite:universities.db");
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -43,6 +43,7 @@ public class SQLiteJDBC {
                     .append("TELEPHONE TEXT,")
                     .append("TELEPHONE_OF_SELECTION_COMMITTEE TEXT,")
                     .append("SITE TEXT,")
+                    .append("URL TEXT,")
                     .append("TRAINING_AREAS TEXT,")
                     .append("FACULTIES TEXT);");
             statement.executeUpdate(sql.toString());
@@ -56,7 +57,7 @@ public class SQLiteJDBC {
     public void insertToTable(University u, int key){
         StringBuilder sql = new StringBuilder("INSERT INTO UNIVERSITIES (ID, NAME, CITY, YEAR, STATUS, ACCREDITATION, ")
                 .append("DOCUMENT, FORM_OF_EDUCATION, ")
-                .append("QUALIFICATION, ADDRESS, TELEPHONE, TELEPHONE_OF_SELECTION_COMMITTEE , SITE, TRAINING_AREAS, FACULTIES) ")
+                .append("QUALIFICATION, ADDRESS, TELEPHONE, TELEPHONE_OF_SELECTION_COMMITTEE , SITE, URL, TRAINING_AREAS, FACULTIES) ")
                 .append("VALUES (")
                 .append(key)
                 .append(", '")
@@ -83,6 +84,8 @@ public class SQLiteJDBC {
                 .append(u.getTelephoneOfSelectionCommittee())
                 .append("', '")
                 .append(u.getUniversitySite())
+                .append("', '")
+                .append(u.getURL())
                 .append("', '")
                 .append(u.getTrainingAreas())
                 .append("', '")

@@ -30,7 +30,7 @@ public class Parser {
         String name = doc.select("h1").get(0).text();
         String city = doc.select("span[itemprop=addressLocality]").text();
         University university = new University(name, city);
-
+        university.setURL(URL);
         Elements elements = doc.select("td");
         university.setYearOfFoundation(elements.get(3).text());
         university.setStatus(elements.get(5).text());
@@ -62,7 +62,7 @@ public class Parser {
                 university.getFaculties().put(faculties.get(i).text(), specialitiesList);
             }
         }else{
-            System.err.println("Fuck this site!");
+            System.err.println("Cant parse faculties");
         }
     }
 
@@ -78,6 +78,13 @@ public class Parser {
         if (secondColumn.size() != 0) {
             secondColumn = secondColumn.get(0).getAllElements().select("a[rel=nofollow]");
             for (Element e : secondColumn) {
+                university.getTrainingAreas().add(e.text());
+            }
+        }
+        Elements column = doc.select("ul[class=grey]");
+        if (column.size() != 0) {
+            column = column.get(0).getAllElements().select("a[href=#]");
+            for (Element e : column) {
                 university.getTrainingAreas().add(e.text());
             }
         }

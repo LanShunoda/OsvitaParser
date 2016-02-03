@@ -32,6 +32,8 @@ public class University {
     private String telephoneOfSelectionCommittee;
     private String universitySite;
 
+    private String URL;
+
     public String getYearOfFoundation() {
         return yearOfFoundation;
     }
@@ -122,6 +124,14 @@ public class University {
 
     public TreeMap<String, ArrayList<String>> getFaculties() {
         return faculties;
+    }
+
+    public String getURL() {
+        return URL;
+    }
+
+    public void setURL(String URL) {
+        this.URL = URL;
     }
 
     @Override
