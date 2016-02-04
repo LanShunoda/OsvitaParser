@@ -126,19 +126,38 @@ public class SQLiteJDBC {
         return sortedTrainingAreas;
     }
 
-    public void createTrainingAreasTableAndInsert(TreeMap<String, ArrayList<Integer>> trainingAreas){
+    public void createTableAndInsert(TreeMap<String, ArrayList<Integer>> map, String tableName, String keyName){
         try {
             statement = connection.createStatement();
-            String sql = "CREATE TABLE TrainingAreas (TrainingArea TEXT PRIMARY KEY NOT NULL, idOfUniversity TEXT)";
+            String sql = "CREATE TABLE " + tableName + " (" + keyName + " TEXT PRIMARY KEY NOT NULL, idOfUniversity TEXT)";
             statement.executeUpdate(sql);
-            for (Map.Entry<String,ArrayList<Integer>> entry : trainingAreas.entrySet()) {
-                sql = "INSERT INTO TrainingAreas (TrainingArea, idOfUniversity) VALUES ('" + entry.getKey() + "', '" + entry.getValue() + "');";
+            for (Map.Entry<String,ArrayList<Integer>> entry : map.entrySet()) {
+                sql = "INSERT INTO " + tableName + " (" + keyName + ", idOfUniversity) VALUES ('" + entry.getKey() + "', '" + entry.getValue() + "');";
                 statement.executeUpdate(sql);
             }
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public TreeMap readCitiesFromTable(){
+        TreeMap<String, ArrayList<Integer>> cities= new TreeMap<>();
+        try (ResultSet resultSet = connection.createStatement().executeQuery("SELECT * FROM UNIVERSITIES")){
+            while (resultSet.next()){
+                String s = resultSet.getString("CITY");
+                int id = resultSet.getInt("ID");
+                if (cities.containsKey(s)) {
+                    cities.get(s).add(id);
+                }else {
+                    ArrayList<Integer> listId = new ArrayList<>();
+                    listId.add(id);
+                    cities.put(s, listId);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return cities;
     }
 
     public void closeDB(){

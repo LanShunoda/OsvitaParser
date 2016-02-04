@@ -17,7 +17,9 @@ public class Main {
         SQLiteJDBC db = new SQLiteJDBC();
         db.openDB();
         TreeMap trainAreas = db.readTrainingAreasFromTable();
-        db.createTrainingAreasTableAndInsert(trainAreas);
+        db.createTableAndInsert(trainAreas, "TrainingAreas", "TrainingArea");
+        TreeMap cities = db.readCitiesFromTable();
+        db.createTableAndInsert(cities, "Cities", "City");
         db.closeDB();
     }
 
