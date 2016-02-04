@@ -1,9 +1,10 @@
 package com.plorial.osvitaparser;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.TreeMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by plorial on 02.02.16.
@@ -98,9 +99,45 @@ public class SQLiteJDBC {
         }
     }
 
+    public TreeMap readTable(){
+        TreeMap<String, ArrayList<Integer>> sortedTrainingAreas= new TreeMap<>();
+        try (ResultSet resultSet = connection.createStatement().executeQuery("SELECT * FROM UNIVERSITIES")){
+            while (resultSet.next()){
+                String s = resultSet.getString("TRAINING_AREAS");
+                int id = resultSet.getInt("ID");
+                System.out.println("ID " + id);
+                Matcher matcher = Pattern.compile("\\((.*?)\\)").matcher(s);
+                String res = "";
+                while (matcher.find()) {
+                    res = matcher.group();
+                    String trainArea = res.substring(1,res.length()-1);
+                    if (sortedTrainingAreas.containsKey(trainArea)) {
+                       sortedTrainingAreas.get(trainArea).add(id);
+                        System.out.println("added to existing training area id " + id);
+                    }else {
+                        ArrayList<Integer> listId = new ArrayList<>();
+                        listId.add(id);
+                        sortedTrainingAreas.put(trainArea, listId);
+                        System.out.println("added new training area from id " + id);
+                    }
+                }
+            }
+            System.out.println(sortedTrainingAreas.size());
+            return sortedTrainingAreas;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+//    private String getStringBetweenBrackets(String s){
+//
+//    }
+
     public void closeDB(){
         try {
             connection.close();
+            if(statement != null)
             statement.close();
         } catch (SQLException e) {
             e.printStackTrace();

@@ -8,6 +8,14 @@ import java.io.IOException;
 public class Main {
     public static void main(String[] args) throws IOException {
 
+        SQLiteJDBC db = new SQLiteJDBC();
+        db.openDB();
+        System.out.println(db.readTable());
+        db.closeDB();
+
+    }
+
+    public static void parseURLAndAddToDataBase() throws IOException {
         String URL = "http://www.osvita.com.ua/universities/";
 
         SQLiteJDBC db = new SQLiteJDBC();
