@@ -1,6 +1,7 @@
 package com.plorial.osvitaparser;
 
 import java.io.IOException;
+import java.util.TreeMap;
 
 /**
  * Created by plorial on 01.02.16.
@@ -8,19 +9,24 @@ import java.io.IOException;
 public class Main {
     public static void main(String[] args) throws IOException {
 
-        SQLiteJDBC db = new SQLiteJDBC();
-        db.openDB();
-        System.out.println(db.readTable());
-        db.closeDB();
-
+//        parseURLAndAddToDataBase();
+        sortTrainingAreas();
     }
 
-    public static void parseURLAndAddToDataBase() throws IOException {
+    private static void sortTrainingAreas(){
+        SQLiteJDBC db = new SQLiteJDBC();
+        db.openDB();
+        TreeMap trainAreas = db.readTrainingAreasFromTable();
+        db.createTrainingAreasTableAndInsert(trainAreas);
+        db.closeDB();
+    }
+
+    private static void parseURLAndAddToDataBase() throws IOException {
         String URL = "http://www.osvita.com.ua/universities/";
 
         SQLiteJDBC db = new SQLiteJDBC();
         db.openDB();
-        db.createTable();
+        db.createUniversityTable();
         int counter = 1;
         for(int i = 1; i < 1000; i++) {
             Parser parser = new Parser(URL + i + "/");
@@ -29,7 +35,7 @@ public class Main {
                 System.out.println(i + " link is not valid");
                 continue;
             }else {
-                db.insertToTable(u, counter);
+                db.insertUniversityToTable(u, counter);
                 System.out.println(i + " university added");
                 counter++;
             }

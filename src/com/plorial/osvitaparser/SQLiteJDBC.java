@@ -2,6 +2,7 @@ package com.plorial.osvitaparser;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -27,7 +28,7 @@ public class SQLiteJDBC {
         System.out.println("Opened database successfully");
     }
 
-    public void createTable(){
+    public void createUniversityTable(){
         try {
             statement = connection.createStatement();
             StringBuilder sql = new StringBuilder("CREATE TABLE if not exists UNIVERSITIES ")
@@ -55,7 +56,7 @@ public class SQLiteJDBC {
         System.out.println("Table created successfully");
     }
 
-    public void insertToTable(University u, int key){
+    public void insertUniversityToTable(University u, int key){
         StringBuilder sql = new StringBuilder("INSERT INTO UNIVERSITIES (ID, NAME, CITY, YEAR, STATUS, ACCREDITATION, ")
                 .append("DOCUMENT, FORM_OF_EDUCATION, ")
                 .append("QUALIFICATION, ADDRESS, TELEPHONE, TELEPHONE_OF_SELECTION_COMMITTEE , SITE, URL, TRAINING_AREAS, FACULTIES) ")
@@ -99,40 +100,46 @@ public class SQLiteJDBC {
         }
     }
 
-    public TreeMap readTable(){
+    public TreeMap readTrainingAreasFromTable(){
         TreeMap<String, ArrayList<Integer>> sortedTrainingAreas= new TreeMap<>();
         try (ResultSet resultSet = connection.createStatement().executeQuery("SELECT * FROM UNIVERSITIES")){
             while (resultSet.next()){
                 String s = resultSet.getString("TRAINING_AREAS");
                 int id = resultSet.getInt("ID");
-                System.out.println("ID " + id);
-                Matcher matcher = Pattern.compile("\\((.*?)\\)").matcher(s);
+                Matcher matcher = Pattern.compile("\\((.*?)\\)").matcher(s); //O_o magic
                 String res = "";
                 while (matcher.find()) {
                     res = matcher.group();
                     String trainArea = res.substring(1,res.length()-1);
                     if (sortedTrainingAreas.containsKey(trainArea)) {
                        sortedTrainingAreas.get(trainArea).add(id);
-                        System.out.println("added to existing training area id " + id);
                     }else {
                         ArrayList<Integer> listId = new ArrayList<>();
                         listId.add(id);
                         sortedTrainingAreas.put(trainArea, listId);
-                        System.out.println("added new training area from id " + id);
                     }
                 }
             }
-            System.out.println(sortedTrainingAreas.size());
-            return sortedTrainingAreas;
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return null;
+        return sortedTrainingAreas;
     }
 
-//    private String getStringBetweenBrackets(String s){
-//
-//    }
+    public void createTrainingAreasTableAndInsert(TreeMap<String, ArrayList<Integer>> trainingAreas){
+        try {
+            statement = connection.createStatement();
+            String sql = "CREATE TABLE TrainingAreas (TrainingArea TEXT PRIMARY KEY NOT NULL, idOfUniversity TEXT)";
+            statement.executeUpdate(sql);
+            for (Map.Entry<String,ArrayList<Integer>> entry : trainingAreas.entrySet()) {
+                sql = "INSERT INTO TrainingAreas (TrainingArea, idOfUniversity) VALUES ('" + entry.getKey() + "', '" + entry.getValue() + "');";
+                statement.executeUpdate(sql);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
     public void closeDB(){
         try {
