@@ -1,9 +1,7 @@
 package com.plorial.osvitaparser;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -158,6 +156,50 @@ public class SQLiteJDBC {
             e.printStackTrace();
         }
         return cities;
+    }
+
+    public String readFacultiesFromTable(){
+        try (ResultSet resultSet = connection.createStatement().executeQuery("SELECT * FROM UNIVERSITIES")){
+            while (resultSet.next()){
+                String s = resultSet.getString("FACULTIES");
+                int id = resultSet.getInt("ID");
+                if(s.equals("{}") || s.equals("{Специальности=[]}"))
+                    continue;
+                try{
+                parseFaculties(s);}
+                catch (Exception e){
+                    System.out.println(s);
+                    System.out.println("University id "  + id);
+                    e.printStackTrace();
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private Map<String, String[]> parseFaculties(String s) {
+        HashMap<String, String[]> result = new HashMap<>();
+        String[] splited = s.split("\\]");
+
+        for(int i = 0; i < splited.length - 1; i++){
+            String[] strings = splited[i].split("\\[");
+
+            String key = strings[0].substring(1,strings[0].length()-1);
+
+            String[] values;
+            if(strings.length > 1) {
+                values = strings[1].split("\\;\\,");
+            }
+            else {
+                values = new String[]{};
+//                System.out.println(Arrays.toString(strings));
+            }
+
+            result.put(key, values);
+        }
+        return result;
     }
 
     public void closeDB(){

@@ -9,9 +9,6 @@ import org.jsoup.select.Elements;
 import java.io.IOException;
 import java.util.ArrayList;
 
-/**
- * Created by plorial on 01.02.16.
- */
 public class Parser {
     private String URL;
 

@@ -8,9 +8,16 @@ import java.util.TreeMap;
  */
 public class Main {
     public static void main(String[] args) throws IOException {
-
+        testFacultiesParse();
 //        parseURLAndAddToDataBase();
-        sortTrainingAreas();
+//        sortTrainingAreas();
+    }
+
+    private static void testFacultiesParse(){
+        SQLiteJDBC db = new SQLiteJDBC();
+        db.openDB();
+        db.readFacultiesFromTable();
+        db.closeDB();
     }
 
     private static void sortTrainingAreas(){
